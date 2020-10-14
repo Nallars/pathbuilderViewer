@@ -1,0 +1,8 @@
+{
+    "/api/*": {
+      "target": "https://wanderersguide.app/",
+      "secure": false,
+      "changeOrigin": true,
+      "logLevel": "debug"
+      }
+}

@@ -11,8 +11,8 @@ import {PathbuilderBuild} from './models/pathbuilderBuild.model'
 export class RequestService {
 
 
-  private API_WANDERERS = "http://wanderersguide.app/api/";
-  private API_KEY = "5c6be71c-a618-4db5-a71d-8c35e09ea8e7";
+  private API_WANDERERS = "/api/";
+  private API_KEY = "bdca6e6c-6afd-4e88-94cf-d704c253310e";
 
   constructor(private httpClient: HttpClient) {
   }
@@ -22,7 +22,8 @@ export class RequestService {
   }
 
   public getItemDataFromWanderers(name: string): Observable<any> {
-    const headers = new HttpHeaders().set('Authorization', 'Apikey ' + this.API_KEY);
+    const headers = new HttpHeaders().set('Authorization', 'Apikey ' + this.API_KEY)
+    .append('Access-Control-Allow-Origin','*');
     return this.httpClient.get<any>(this.API_WANDERERS+"item?name="+name, {
       headers: headers
     });
