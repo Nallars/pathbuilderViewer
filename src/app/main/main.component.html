@@ -1,0 +1,65 @@
+<mat-toolbar>
+    <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+      <mat-icon>menu</mat-icon>
+    </button> -->
+    <span>Pathbuilder Viewer</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button class="favorite-icon" aria-label="Example icon-button with heart icon">
+      <mat-icon>favorite</mat-icon>
+    </button>
+  </mat-toolbar>
+
+  <div class="container">
+    <mat-card class="card">
+      http://pathbuilder2e.com/json.php?id=100057
+      <form [formGroup]="urlForm" (ngSubmit)="onSubmit(urlForm.value)">
+        <mat-form-field>
+          <mat-label>URL</mat-label>
+          <input matInput placeholder="URL" formControlName="url" b>
+        </mat-form-field>
+        <button mat-button type="submit">Go</button>
+        <button (click)="getItemDataFromWanderers('halfplate')">Boutton</button>
+
+      </form>
+    </mat-card>
+
+    <mat-card class="card card-tabs" *ngIf="characters.length != 0">
+      <mat-tab-group>
+        <mat-tab *ngFor="let character of characters" label="{{character.name}}">
+          <div>
+            <p> Name : {{character.name}}</p>
+            <p> Class : {{character.class}}</p>
+            <p> Ancestry : {{character.ancestry}}</p>
+            <p> Background : {{character.background}}</p>
+            <p> Level : {{character.level}}</p>
+            <p> Alignement : {{character.alignment}}</p>
+            <p> Gender : {{character.gender}}</p>
+            <p> Deity : {{character.deity}}</p>
+            <p> Age : {{character.age}}</p>
+            <p> Languages : {{character.languages.toString()}}</p>
+          </div>
+
+          <div>
+            <p> STR : {{character.abilities.str}}</p>
+            <p> DEX : {{character.abilities.dex}}</p>
+            <p> CON : {{character.abilities.con}}</p>
+            <p> INT : {{character.abilities.int}}</p>
+            <p> WIS : {{character.abilities.wis}}</p>
+            <p> CHA : {{character.abilities.cha}}</p>
+          </div>
+
+          <div>
+            <p> CA : {{10 + computeModifier(character.abilities.dex) + character.proficiencies[findArmorProf(character.armor).prof]}}</p>
+          </div>
+
+          <div>
+
+          </div>
+          
+        </mat-tab>
+      </mat-tab-group>
+      
+    </mat-card>
+  </div>
+
+
