@@ -30,7 +30,7 @@ export class MainComponent implements OnInit {
      private dbReader: DbReaderService, private _snackBar: MatSnackBar, private sanitized: DomSanitizer,
      private elRef:ElementRef, private renderer:Renderer2) {
     this.urlForm = this.formBuilder.group({
-      url: 'http://pathbuilder2e.com/json.php?id=100057'
+      url: 'https://pathbuilder2e.com/json.php?id=100057'
     });
   }
   
