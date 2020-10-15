@@ -1,65 +1,141 @@
 <mat-toolbar>
-    <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-      <mat-icon>menu</mat-icon>
-    </button> -->
-    <span>Pathbuilder Viewer</span>
-    <span class="example-spacer"></span>
-    <button mat-icon-button class="favorite-icon" aria-label="Example icon-button with heart icon">
-      <mat-icon>favorite</mat-icon>
-    </button>
-  </mat-toolbar>
+  <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button> -->
+  <img src="../../assets/pathbuilder.png" alt="pathbuilder" height="25px">
+  <span *ngIf="!mobile">Pathbuilder Viewer</span>
+  <span class="example-spacer"></span>
+  <input matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
+  <span class="example-spacer"></span>
+  <mat-slide-toggle [(ngModel)]="edit"><mat-icon>edit</mat-icon></mat-slide-toggle>
+</mat-toolbar>
 
-  <div class="container">
-    <mat-card class="card">
-      http://pathbuilder2e.com/json.php?id=100057
-      <form [formGroup]="urlForm" (ngSubmit)="onSubmit(urlForm.value)">
-        <mat-form-field>
-          <mat-label>URL</mat-label>
-          <input matInput placeholder="URL" formControlName="url" b>
-        </mat-form-field>
-        <button mat-button type="submit">Go</button>
-        <button (click)="getItemDataFromWanderers('half plate')">Boutton</button>
+<div class="container">
+  <mat-card class="card card-tabs" *ngIf="searchResult">
+    <div *ngIf="searchResult" [innerHTML]="searchResult"></div>
+  </mat-card>
 
-      </form>
-    </mat-card>
+  <mat-card class="card card-tabs">
+    TODO : Personnalized stats
 
-    <mat-card class="card card-tabs" *ngIf="characters.length != 0">
-      <mat-tab-group>
-        <mat-tab *ngFor="let character of characters" label="{{character.name}}">
-          <div>
-            <p> Name : {{character.name}}</p>
-            <p> Class : {{character.class}}</p>
-            <p> Ancestry : {{character.ancestry}}</p>
-            <p> Background : {{character.background}}</p>
-            <p> Level : {{character.level}}</p>
-            <p> Alignement : {{character.alignment}}</p>
-            <p> Gender : {{character.gender}}</p>
-            <p> Deity : {{character.deity}}</p>
-            <p> Age : {{character.age}}</p>
-            <p> Languages : {{character.languages.toString()}}</p>
-          </div>
-
-          <div>
-            <p> STR : {{character.abilities.str}}</p>
-            <p> DEX : {{character.abilities.dex}}</p>
-            <p> CON : {{character.abilities.con}}</p>
-            <p> INT : {{character.abilities.int}}</p>
-            <p> WIS : {{character.abilities.wis}}</p>
-            <p> CHA : {{character.abilities.cha}}</p>
-          </div>
-
-          <div>
-            <p> CA : {{10 + computeModifier(character.abilities.dex) + character.proficiencies[findArmorProf(character.armor).prof]}}</p>
-          </div>
-
-          <div>
-
-          </div>
-          
-        </mat-tab>
-      </mat-tab-group>
+  </mat-card>
+  <mat-card class="card card-tabs">
+    <form [formGroup]="urlForm" (ngSubmit)="onSubmit(urlForm.value)">
+      <mat-form-field class="field-form-pathbuilder">
+        <mat-label>URL</mat-label>
+        <input matInput placeholder="URL" formControlName="url" b>
+      </mat-form-field>
+      <button mat-button class="submit-form-pathbuilder" type="submit">Add</button>
       
-    </mat-card>
-  </div>
+    </form>
+  </mat-card>
+  
+  <mat-card class="card card-tabs" *ngIf="characters.length != 0">
+    <mat-tab-group>
+      <mat-tab *ngFor="let character of characters">
+        <!-- Label -->
+        <ng-template mat-tab-label>
+          <button mat-icon-button *ngIf="edit" (click)="deleteCharacter(character)">
+            <mat-icon>delete</mat-icon>
+          </button>
+          <span matBadge="{{character.level}}" matBadgeOverlap="false">{{character.name}}</span>
+        </ng-template>
+        <!-- Character Tabs -->
+        <mat-tab-group>
+          <mat-tab label="About">
+            <div>
+              <p> Name : {{character.name}}</p>
+              <p> Class : {{character.class}}</p>
+              <p> Ancestry : {{character.ancestry}}</p>
+              <p> Background : {{character.background}}</p>
+              <p> Level : {{character.level}}</p>
+              <p> Alignement : {{character.alignment}}</p>
+              <p> Gender : {{character.gender}}</p>
+              <p> Deity : {{character.deity}}</p>
+              <p> Age : {{character.age}}</p>
+              <p> Languages : {{character.languages.toString()}}</p>
+            </div>
+          </mat-tab>
+          <mat-tab label="Abilities">
+            <div>
+              <p> STR : {{character.abilities.str}}</p>
+              <p> DEX : {{character.abilities.dex}}</p>
+              <p> CON : {{character.abilities.con}}</p>
+              <p> INT : {{character.abilities.int}}</p>
+              <p> WIS : {{character.abilities.wis}}</p>
+              <p> CHA : {{character.abilities.cha}}</p>
+              <p> Speed : {{character.attributes.speed}}</p>
+            </div>
+          </mat-tab>
+          <mat-tab label="Defense">
+            <div>
+              <p> CA : {{computeAC(character)}} </p>
+              <p> <i>CA Bonus Shield : TODO</i> </p>
+              <p> HP : {{computeHP(character)}} </p>
+              <p>{{computeModifier(character.abilities.con)}}</p>
+              <p> Fortitude : +{{computeModifier(character.abilities.con) + character.level + findBonusProf("fortitude",character)}}</p>
+              <p> Reflex : +{{computeModifier(character.abilities.dex) + character.level + findBonusProf("reflex",character)}}</p>
+              <p> Will : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("will",character)}}</p>
+            </div>
+          </mat-tab>
+          <mat-tab label="Offense">
+            <div>
+              <p> Perception : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("perception",character)}}</p>
+              <div *ngFor="let weapon of character.weapons">
+                <p> Name : {{weapon.name}} </p>
+                <p> Attack Bonuses (STR): {{computeAttackBonus(weapon,character,character.abilities.str)}}</p>
+                <p> Attack Bonuses (DEX): {{computeAttackBonus(weapon,character,character.abilities.dex)}}</p>
+                <p> Damage Dice: {{strikingRunes[weapon.str]}}{{weapon.die}} + {{computeModifier(character.abilities.str)}}</p>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Skills">
+            <div>
+              <p> Acrobatics : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.acrobatics)}}</p>
+              <p> Arcana : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.arcana)}}</p>
+              <p> Athletics : {{computeSkill(computeModifier(character.abilities.str),character.level,character.proficiencies.athletics)}}</p>
+              <p> Crafting : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.crafting)}}</p>
+              <p> Deception : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.deception)}}</p>
+              <p> Diplomacy : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.diplomacy)}}</p>
+              <p> Intimidation : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.intimidation)}}</p>
+              <p> Medicine : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.medicine)}}</p>
+              <p> Nature : {{computeSkill(computeModifier(character.abilities.wis), character.level,character.proficiencies.nature)}}</p>
+              <p> Occultism : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.occultism)}}</p>
+              <p> Performance : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.performance)}}</p>
+              <p> Religion : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.religion)}}</p>
+              <p> Society : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.society)}}</p>
+              <p> Stealth : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.stealth)}}</p>
+              <p> Survival : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.survival)}}</p>
+              <p> Thievery : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.thievery)}}</p>
+            </div>
+          </mat-tab>
+          <mat-tab label="Spells">
+            <div>
+              <div *ngFor="let spellList of character.spellCasters">
+                <p> List : {{spellList.name}} -- {{spellList.spellcastingType}}</p>
+                <p> Spell per day : {{spellList.perDay.toString()}}</p>
+                <div *ngFor="let spells of spellList.spells">
+                  <h3>Spell Level {{spells.spellLevel}}</h3>
+                  <div *ngFor="let spell of spells.list">
+                    <p>{{spell}}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+          <mat-tab label="Feats">
+            <div>
+              <div *ngFor="let feat of character.feats">
+                <p>Feat : {{feat[0]}}</p>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+        
+      </mat-tab>
+    </mat-tab-group>
+    
+  </mat-card>
+</div>
 
 

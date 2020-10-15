@@ -85,6 +85,7 @@ export interface Armor {
     display: string;
     worn: boolean;
     runes: any[];
+    ac: number;
 }
 
 export interface Spell {

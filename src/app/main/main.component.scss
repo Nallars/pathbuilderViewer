@@ -7,13 +7,32 @@
   height: 100%;
   background-image: url("../../assets/background.d5fac23cc65cb9fff670.jpg");
   background-size: cover;
+  background-repeat: repeat;
 }
 
 .card {
-  width: 1000px;
+  max-width: 1200px;
   margin: auto;
 }
 
 .card-tabs{
   margin-top: 25px;
 }
+
+.quick-search-input{
+  margin: auto;
+  width: auto;
+}
+
+.field-form-pathbuilder {
+  display: block;
+  max-width: 500px;
+  align-self: center;
+  margin: auto;
+}
+
+.submit-form-pathbuilder {
+  display: block;
+  margin: auto;
+}
+

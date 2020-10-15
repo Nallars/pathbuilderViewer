@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { MainComponent } from './main.component';
 import { AppModule } from '../app.module';
 import { MaterialModule } from '../material/material.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
   imports: [
     CommonModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
     declarations: [MainComponent],
     exports : [

@@ -1,0 +1,93 @@
+{
+    "_id": "k6xZkDUpF7E1Totd",
+    "data": {
+        "brokenThreshold": {
+            "value": 0
+        },
+        "bulkCapacity": {
+            "value": ""
+        },
+        "collapsed": {
+            "value": false
+        },
+        "containerId": {
+            "value": ""
+        },
+        "description": {
+            "chat": "",
+            "unidentified": "",
+            "value": "<p><span>You need an alchemist’s lab to Craft alchemical items during downtime.</span></p>"
+        },
+        "equipped": {
+            "value": false
+        },
+        "equippedBulk": {
+            "value": ""
+        },
+        "hardness": {
+            "value": 0
+        },
+        "hp": {
+            "value": 0
+        },
+        "identified": {
+            "value": false
+        },
+        "invested": {
+            "value": false
+        },
+        "level": {
+            "value": "0"
+        },
+        "maxHp": {
+            "value": 0
+        },
+        "negateBulk": {
+            "value": "0"
+        },
+        "preciousMaterial": {
+            "value": ""
+        },
+        "preciousMaterialGrade": {
+            "value": ""
+        },
+        "price": {
+            "value": "5 gp"
+        },
+        "quantity": {
+            "value": "1"
+        },
+        "rarity": {
+            "value": "common"
+        },
+        "rules": [],
+        "source": {
+            "value": ""
+        },
+        "stackGroup": {
+            "value": ""
+        },
+        "traits": {
+            "rarity": {
+                "value": "common"
+            },
+            "usage": {
+                "value": "held-in-two-hands"
+            },
+            "value": []
+        },
+        "usage": {
+            "value": "held-in-one-hand"
+        },
+        "weight": {
+            "value": "6"
+        }
+    },
+    "flags": {},
+    "img": "systems/pf2e/icons/equipment/adventuring-gear/alchemists-lab.jpg",
+    "name": "Alchemist's Lab",
+    "permission": {
+        "default": 0
+    },
+    "type": "equipment"
+}
