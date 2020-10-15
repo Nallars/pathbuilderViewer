@@ -3,7 +3,7 @@
 }
 
 .container {
-  padding-top: 50px;
+  padding-top: 20px;
   height: 100%;
   background-image: url("../../assets/background.d5fac23cc65cb9fff670.jpg");
   background-size: cover;
@@ -11,7 +11,7 @@
 }
 
 .card {
-  max-width: 1200px;
+  max-width: 800px;
   margin: auto;
 }
 
@@ -64,4 +64,12 @@
   background-color: #fefefe;
 }
 
+.padding10{
+  padding-top:10px;
+  padding-bottom: 10px;
+}
+
+.flex-wrap{
+  flex-wrap: wrap;
+}
 

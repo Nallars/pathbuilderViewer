@@ -1,13 +1,18 @@
 <mat-toolbar>
-  <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
-    <mat-icon>menu</mat-icon>
-  </button> -->
   <img src="assets/pathbuilder.png" alt="" height="25px">
-  <span *ngIf="!mobile">Pathbuilder Viewer</span>
-  <span *ngIf="!mobile"class="example-spacer"></span>
-  <input *ngIf="!mobile" matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
+  <span>Pathbuilder Viewer</span>
+  <span fxHide.lt-md="true" class="example-spacer"></span>
+  <input fxHide.lt-md="true" matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
+  <span fxHide.lt-md="true" class="example-spacer"></span>
+  <mat-slide-toggle fxHide.lt-md="true" [(ngModel)]="aonSearch"><span *ngIf="aonSearch">AON</span><span *ngIf="!aonSearch">P2EzLib</span></mat-slide-toggle>
   <span class="example-spacer"></span>
   <mat-slide-toggle [(ngModel)]="edit"><mat-icon>edit</mat-icon></mat-slide-toggle>
+</mat-toolbar>
+
+<mat-toolbar fxHide.gt-sm="true">
+  <input matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
+  <span class="example-spacer"></span>
+  <mat-slide-toggle [(ngModel)]="aonSearch"><span *ngIf="aonSearch">AON</span><span *ngIf="!aonSearch">P2EzLib</span></mat-slide-toggle>
 </mat-toolbar>
 
 <div class="container">
@@ -15,18 +20,13 @@
     <div *ngIf="searchResult" [innerHTML]="searchResult"></div>
   </mat-card>
   
-  <mat-card class="card card-tabs">
-    TODO : Personnalized stats
-    
-  </mat-card>
-  <mat-card class="card card-tabs">
+  <mat-card class="card card-tabs" *ngIf="edit">
     <form [formGroup]="urlForm" (ngSubmit)="onSubmit(urlForm.value)">
       <mat-form-field class="field-form-pathbuilder">
         <mat-label>URL</mat-label>
-        <input matInput placeholder="URL" formControlName="url" b>
+        <input matInput placeholder="URL" formControlName="url">
       </mat-form-field>
       <button mat-button class="submit-form-pathbuilder" type="submit">Add</button>
-      
     </form>
   </mat-card>
   
@@ -41,6 +41,7 @@
           <span matBadge="{{character.level}}" matBadgeOverlap="false">{{character.name}}</span>
         </ng-template>
         <!-- Character Tabs -->
+        <!-- ABOUT TAB -->
         <mat-tab-group>
           <mat-tab label="About">
             <div class="about-tab" fxLayout="column" fxLayoutAlign="space-evenly">
@@ -63,20 +64,20 @@
               </div>
               <div class="margin10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
                 <div fxLayout="column" fxFlex="50">
-                  <div class="margin10"> Level : {{character.level}}</div>
+                  <div class="margin10"> <b>Level</b> : {{character.level}}</div>
                   <div class="margin10"> Gender : {{character.gender}}</div>
                   <div class="margin10"> Age : {{character.age}}</div>
+                  <div class="margin10"> <b>Size</b> : {{size[character.size]}}</div>
+                  
                 </div>
                 <div fxLayout="column" fxFlex="50">
                   <div class="margin10"> Alignement : {{character.alignment}}</div>
                   <div class="margin10"> Deity : {{character.deity}}</div>
                   <div class="margin10"> Languages : {{character.languages.toString()}}</div>
+                  <div class="margin10"> <b>Speed</b> : {{character.attributes.speed}} ft.</div>
                 </div>
               </div>
-            </div>
-          </mat-tab>
-          <mat-tab label="Abilities">
-            <div class="about-tab" fxLayout="column" fxLayoutAlign="space-evenly">
+              
               <div class="margin10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
                 <div fxLayout="column" fxFlex="50">
                   <div class="margin10"> STR : {{character.abilities.str}} <b>({{displayModifier(character.abilities.str)}})</b></div>
@@ -89,56 +90,196 @@
                   <div class="margin10"> CHA : {{character.abilities.cha}} <b>({{displayModifier(character.abilities.cha)}})</b></div>
                 </div>
               </div>
-              <div class="margin10"> Speed : {{character.attributes.speed}}</div>
+              
             </div>
           </mat-tab>
-          <mat-tab label="Defense">
-            <div>
-              <p> CA : {{computeAC(character)}} </p>
-              <p> <i>CA Bonus Shield : TODO</i> </p>
-              <p> HP : {{computeHP(character)}} </p>
-              <p> Fortitude : +{{computeModifier(character.abilities.con) + character.level + findBonusProf("fortitude",character)}}</p>
-              <p> Reflex : +{{computeModifier(character.abilities.dex) + character.level + findBonusProf("reflex",character)}}</p>
-              <p> Will : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("will",character)}}</p>
-            </div>
-          </mat-tab>
-          <mat-tab label="Offense">
-            <div>
-              <p> Perception : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("perception",character)}}</p>
-              <div *ngFor="let weapon of character.weapons">
-                <p> Name : {{weapon.name}} </p>
-                <p> Attack Bonuses (STR): {{computeAttackBonus(weapon,character,character.abilities.str)}}</p>
-                <p> Attack Bonuses (DEX): {{computeAttackBonus(weapon,character,character.abilities.dex)}}</p>
-                <p> Damage Dice: {{strikingRunes[weapon.str]}}{{weapon.die}} + {{computeModifier(character.abilities.str)}}</p>
-                <div class="iconText">
-                  <span>Damage Dice: </span>
-                  <img [src]="'assets/PathbuilderIcons/icon_'+weapon.die+'.png'" height="30px">
-                  <span>{{strikingRunes[weapon.str]}}{{weapon.die}} + {{computeModifier(character.abilities.str)}}</span>
+          <!-- COMBAT TAB -->
+          <mat-tab label="Combat">
+            <div fxLayout="column">
+              <div class="margin10 bordered padding10" fxLayout="row" style="min-width:500px; align-self: center;">
+                <div fxFlex="33" fxLayoutAlign="center center">
+                  <img src="assets/PathbuilderIcons/icon_ac.png" height="30px">
+                  <span>{{computeAC(character)}} AC</span>
                 </div>
-                <p>----------------------</p>
+                <div fxFlex="33" fxLayoutAlign="center center">
+                  <span>{{computeHP(character)}} HP</span>
+                </div>
+                <div fxFlex="33" fxLayoutAlign="center center">
+                  <img src="assets/PathbuilderIcons/icon_ac.png" height="30px">
+                  <span>{{computeACShield(character)}} AC (Shielded)</span>
+                </div>
+              </div>
+              <div class="bordered" style="min-width:500px; align-self: center;">
+                <div class="margin10" fxLayout="row">
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('fortitude',character)+'.png'" height="30px">
+                  </div>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('reflex',character)+'.png'" height="30px">
+                  </div>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('will',character)+'.png'" height="30px">
+                  </div>
+                </div>
+                <div class="margin10" fxLayout="row">
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <span>Fortitude : +{{computeModifier(character.abilities.con) + character.level + findBonusProf("fortitude",character)}}</span>
+                  </div>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <span>Reflex : +{{computeModifier(character.abilities.dex) + character.level + findBonusProf("reflex",character)}}</span>
+                  </div>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <span>Will : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("will",character)}}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="margin10 bordered padding10" style="min-width:500px; align-self: center;">
+                <div class="margin10" fxLayout="row" fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('perception',character)+'.png'" height="30px">
+                </div>
+                
+                <div class="margin10" fxLayout="row" fxLayoutAlign="center center">
+                  <span>Perception : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("perception",character)}}</span>
+                </div>
+              </div>
+              
+              <div class="margin10 flex-wrap" fxLayout="row" fxLayoutAlign="space-evenly">
+                <div *ngFor="let weapon of character.weapons" class="margin10 bordered" fxLayout="column" fxFlex="40" fxLayoutAlign="space-evenly">
+                  <p> <b>{{weapon.display}}</b> </p>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProfWeapon(weapon,character)+'.png'" height="30px">
+                  </div>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>+{{computeAttackBonus(weapon,character,character.abilities.str)}} (STR)</span>
+                  </div>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>+{{computeAttackBonus(weapon,character,character.abilities.dex)}} (DEX)</span>
+                  </div>
+                  <div fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_'+weapon.die+'.png'" height="30px">
+                    <span>{{strikingRunes[weapon.str]}}{{weapon.die}} + {{computeModifier(character.abilities.str)}}</span>
+                  </div>
+                  <p *ngIf="weapon.runes.length != 0">Runes : {{weapon.runes.toString()}}</p>
+                </div>
+              </div>
+
+            </div>
+          </mat-tab>
+          <!-- SKILLS TAB -->
+          <mat-tab label="Skills">
+            <div class="about-tab" fxLayout="row" fxLayoutAlign="space-evenly">
+              <div class="margin10 bordered padding10" style="min-width:500px; align-self: center;">
+              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('acrobatics',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('arcana',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('athletics',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('crafting',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('deception',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('diplomacy',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('intimidation',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('medicine',character)+'.png'" height="30px">
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                <div fxLayoutAlign="center center">
+                  Acrobatics : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.acrobatics)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Arcana : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.arcana)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Athletics : {{computeSkill(computeModifier(character.abilities.str),character.level,character.proficiencies.athletics)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Crafting : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.crafting)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Deception : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.deception)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Diplomacy : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.diplomacy)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Intimidation : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.intimidation)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Medicine : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.medicine)}}
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('nature',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('occultism',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('performance',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('religion',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('society',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('stealth',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('survival',character)+'.png'" height="30px">
+                </div>
+                <div fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('thievery',character)+'.png'" height="30px">
+                </div>
+              </div>
+              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                <div fxLayoutAlign="center center">
+                  Nature : {{computeSkill(computeModifier(character.abilities.wis), character.level,character.proficiencies.nature)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Occultism : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.occultism)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Performance : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.performance)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Religion : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.religion)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Society : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.society)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Stealth : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.stealth)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Survival : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.survival)}}
+                </div>
+                <div fxLayoutAlign="center center">
+                  Thievery : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.thievery)}}
+                </div>
               </div>
             </div>
-          </mat-tab>
-          <mat-tab label="Skills">
-            <div>
-              <p> Acrobatics : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.acrobatics)}}</p>
-              <p> Arcana : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.arcana)}}</p>
-              <p> Athletics : {{computeSkill(computeModifier(character.abilities.str),character.level,character.proficiencies.athletics)}}</p>
-              <p> Crafting : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.crafting)}}</p>
-              <p> Deception : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.deception)}}</p>
-              <p> Diplomacy : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.diplomacy)}}</p>
-              <p> Intimidation : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.intimidation)}}</p>
-              <p> Medicine : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.medicine)}}</p>
-              <p> Nature : {{computeSkill(computeModifier(character.abilities.wis), character.level,character.proficiencies.nature)}}</p>
-              <p> Occultism : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.occultism)}}</p>
-              <p> Performance : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.performance)}}</p>
-              <p> Religion : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.religion)}}</p>
-              <p> Society : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.society)}}</p>
-              <p> Stealth : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.stealth)}}</p>
-              <p> Survival : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.survival)}}</p>
-              <p> Thievery : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.thievery)}}</p>
             </div>
           </mat-tab>
+          <!-- SPELLS TAB -->
           <mat-tab label="Spells">
             <div>
               <div *ngFor="let spellList of character.spellCasters">
@@ -153,6 +294,7 @@
               </div>
             </div>
           </mat-tab>
+          <!-- FEATS TAB -->
           <mat-tab label="Feats">
             <div>
               <div *ngFor="let feat of character.feats">
