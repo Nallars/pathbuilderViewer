@@ -36,3 +36,32 @@
   margin: auto;
 }
 
+.iconText {
+  display: flex;
+  align-items:center;
+}
+
+.about-tab{
+  display: flex;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.abilities-tab{
+  display: flex;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.margin10{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.bordered{
+  border: solid 1px #7a201a;
+  border-radius: 10px;
+  background-color: #fefefe;
+}
+
+

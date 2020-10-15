@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MainModule } from './main/main.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -19,6 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
     MainModule,
     BrowserAnimationsModule,
     MaterialModule,
+    FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule
   ],

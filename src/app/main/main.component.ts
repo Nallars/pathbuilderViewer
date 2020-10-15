@@ -67,6 +67,14 @@ export class MainComponent implements OnInit {
   computeModifier(value: number){
     return Math.trunc((value-10)/2);
   }
+
+  displayModifier(value: number){
+    const modifier = Math.trunc((value-10)/2);
+    if (modifier >= 0){
+      return "+" + modifier; 
+    }
+    return modifier;
+  }
   
   computeAC(character: Build){
     return 10 + this.computeModifier(character.abilities.dex) + character.proficiencies[this.findWornArmor(character.armor).prof] 
@@ -140,7 +148,7 @@ export class MainComponent implements OnInit {
           let buttons = this.elRef.nativeElement.querySelectorAll('button.listado');
           console.log(buttons);
           for (let button of buttons){
-            button.addEventListener('click', this.onClick.bind(button, button.children[2].value))
+            button.addEventListener('click', this.onClick.bind(button, button.children[3].value))
           }
         }, 500);
       }, error => {

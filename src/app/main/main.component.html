@@ -14,10 +14,10 @@
   <mat-card class="card card-tabs" *ngIf="searchResult">
     <div *ngIf="searchResult" [innerHTML]="searchResult"></div>
   </mat-card>
-
+  
   <mat-card class="card card-tabs">
     TODO : Personnalized stats
-
+    
   </mat-card>
   <mat-card class="card card-tabs">
     <form [formGroup]="urlForm" (ngSubmit)="onSubmit(urlForm.value)">
@@ -43,28 +43,53 @@
         <!-- Character Tabs -->
         <mat-tab-group>
           <mat-tab label="About">
-            <div>
-              <p> Name : {{character.name}}</p>
-              <p> Class : {{character.class}}</p>
-              <p> Ancestry : {{character.ancestry}}</p>
-              <p> Background : {{character.background}}</p>
-              <p> Level : {{character.level}}</p>
-              <p> Alignement : {{character.alignment}}</p>
-              <p> Gender : {{character.gender}}</p>
-              <p> Deity : {{character.deity}}</p>
-              <p> Age : {{character.age}}</p>
-              <p> Languages : {{character.languages.toString()}}</p>
+            <div class="about-tab" fxLayout="column" fxLayoutAlign="space-evenly">
+              <div class="margin10" fxLayout="row" fxLayoutAlign="space-evenly">
+                <h2>{{character.name}}</h2>
+              </div>
+              <div class="margin10" fxLayout="row" fxLayoutAlign="space-around" style="min-width:500px; align-self: center;"s>
+                <div fxFlex="33" fxLayoutAlign="center center" matTooltip="Class">
+                  <img src="assets/PathbuilderIcons/icon_class.png" height="30px">
+                  <span>{{character.class}}</span>
+                </div>
+                <div fxFlex="33" fxLayoutAlign="center center" matTooltip="Ancestry - Heritage">
+                  <img src="assets/PathbuilderIcons/icon_ancestry.png" height="30px">
+                  <span>{{character.ancestry}} - {{character.heritage}}</span>
+                </div>
+                <div fxFlex="33" fxLayoutAlign="center center" matTooltip="Background">
+                  <img src="assets/PathbuilderIcons/icon_background.png" height="30px">
+                  <span>{{character.background}}</span>
+                </div>
+              </div>
+              <div class="margin10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
+                <div fxLayout="column" fxFlex="50">
+                  <div class="margin10"> Level : {{character.level}}</div>
+                  <div class="margin10"> Gender : {{character.gender}}</div>
+                  <div class="margin10"> Age : {{character.age}}</div>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                  <div class="margin10"> Alignement : {{character.alignment}}</div>
+                  <div class="margin10"> Deity : {{character.deity}}</div>
+                  <div class="margin10"> Languages : {{character.languages.toString()}}</div>
+                </div>
+              </div>
             </div>
           </mat-tab>
           <mat-tab label="Abilities">
-            <div>
-              <p> STR : {{character.abilities.str}}</p>
-              <p> DEX : {{character.abilities.dex}}</p>
-              <p> CON : {{character.abilities.con}}</p>
-              <p> INT : {{character.abilities.int}}</p>
-              <p> WIS : {{character.abilities.wis}}</p>
-              <p> CHA : {{character.abilities.cha}}</p>
-              <p> Speed : {{character.attributes.speed}}</p>
+            <div class="about-tab" fxLayout="column" fxLayoutAlign="space-evenly">
+              <div class="margin10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
+                <div fxLayout="column" fxFlex="50">
+                  <div class="margin10"> STR : {{character.abilities.str}} <b>({{displayModifier(character.abilities.str)}})</b></div>
+                  <div class="margin10"> DEX : {{character.abilities.dex}} <b>({{displayModifier(character.abilities.dex)}})</b></div>
+                  <div class="margin10"> CON : {{character.abilities.con}} <b>({{displayModifier(character.abilities.con)}})</b></div>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                  <div class="margin10"> INT : {{character.abilities.int}} <b>({{displayModifier(character.abilities.int)}})</b></div>
+                  <div class="margin10"> WIS : {{character.abilities.wis}} <b>({{displayModifier(character.abilities.wis)}})</b></div>
+                  <div class="margin10"> CHA : {{character.abilities.cha}} <b>({{displayModifier(character.abilities.cha)}})</b></div>
+                </div>
+              </div>
+              <div class="margin10"> Speed : {{character.attributes.speed}}</div>
             </div>
           </mat-tab>
           <mat-tab label="Defense">
@@ -72,7 +97,6 @@
               <p> CA : {{computeAC(character)}} </p>
               <p> <i>CA Bonus Shield : TODO</i> </p>
               <p> HP : {{computeHP(character)}} </p>
-              <p>{{computeModifier(character.abilities.con)}}</p>
               <p> Fortitude : +{{computeModifier(character.abilities.con) + character.level + findBonusProf("fortitude",character)}}</p>
               <p> Reflex : +{{computeModifier(character.abilities.dex) + character.level + findBonusProf("reflex",character)}}</p>
               <p> Will : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("will",character)}}</p>
@@ -86,6 +110,12 @@
                 <p> Attack Bonuses (STR): {{computeAttackBonus(weapon,character,character.abilities.str)}}</p>
                 <p> Attack Bonuses (DEX): {{computeAttackBonus(weapon,character,character.abilities.dex)}}</p>
                 <p> Damage Dice: {{strikingRunes[weapon.str]}}{{weapon.die}} + {{computeModifier(character.abilities.str)}}</p>
+                <div class="iconText">
+                  <span>Damage Dice: </span>
+                  <img [src]="'assets/PathbuilderIcons/icon_'+weapon.die+'.png'" height="30px">
+                  <span>{{strikingRunes[weapon.str]}}{{weapon.die}} + {{computeModifier(character.abilities.str)}}</span>
+                </div>
+                <p>----------------------</p>
               </div>
             </div>
           </mat-tab>
