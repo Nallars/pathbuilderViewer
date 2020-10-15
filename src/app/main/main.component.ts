@@ -135,6 +135,7 @@ export class MainComponent implements OnInit {
         console.log(response);
 
         this.searchResult = this.sanitized.bypassSecurityTrustHtml(response);
+        //Augmenter le temps
         setTimeout(() => {
           let buttons = this.elRef.nativeElement.querySelectorAll('button.listado');
           console.log(buttons);

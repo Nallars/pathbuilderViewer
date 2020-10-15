@@ -2,10 +2,10 @@
   <!-- <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
     <mat-icon>menu</mat-icon>
   </button> -->
-  <img src="pathbuilderViewer/assets/pathbuilder.png" alt="pathbuilder" height="25px">
+  <img src="assets/pathbuilder.png" alt="" height="25px">
   <span *ngIf="!mobile">Pathbuilder Viewer</span>
-  <span class="example-spacer"></span>
-  <input matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
+  <span *ngIf="!mobile"class="example-spacer"></span>
+  <input *ngIf="!mobile" matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
   <span class="example-spacer"></span>
   <mat-slide-toggle [(ngModel)]="edit"><mat-icon>edit</mat-icon></mat-slide-toggle>
 </mat-toolbar>
