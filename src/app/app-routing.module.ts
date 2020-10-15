@@ -11,8 +11,9 @@ const routes: Routes = [
   }
 ]
 
+// useHash : https://medium.com/code-divoire/angular-le-pi%C3%A8ge-du-hash-90212ab883aa
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
