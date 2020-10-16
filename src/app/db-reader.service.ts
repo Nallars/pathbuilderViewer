@@ -11,11 +11,14 @@ export class DbReaderService {
   }
   
   public getEquipmentInfo(name: string): Observable<any> {
-    console.log(this.formatName(name));
     return this.http.get("./assets/db/equipment.db/"+ this.formatName(name) +".json");
   }
 
+  public getSpellInfo(name: string): Observable<any> {
+    return this.http.get("./assets/db/spells.db/"+ this.formatName(name) +".json");
+  }
+
   private formatName(name: string){
-    return name.toLowerCase().replace(" ","-")
+    return name.toLowerCase().replace(" ","-").replace("\'","-");
   }
 }

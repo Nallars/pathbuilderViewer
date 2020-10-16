@@ -2,24 +2,31 @@
   <img src="assets/pathbuilder.png" alt="" height="25px">
   <span>Pathbuilder Viewer</span>
   <span fxHide.lt-md="true" class="example-spacer"></span>
-  <input fxHide.lt-md="true" matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
+  <input #searchInput fxHide.lt-md="true" class="quick-search-input" placeholder="Quick search" (change)="search($event)">
   <span fxHide.lt-md="true" class="example-spacer"></span>
-  <mat-slide-toggle fxHide.lt-md="true" [(ngModel)]="aonSearch"><span *ngIf="aonSearch">AON</span><span *ngIf="!aonSearch">P2EzLib</span></mat-slide-toggle>
+  <mat-slide-toggle fxHide.lt-md="true" [(ngModel)]="aonSearch"><span *ngIf="aonSearch">AON</span><span
+      *ngIf="!aonSearch" matTooltip="Need CORS extension">P2EzLib</span></mat-slide-toggle>
   <span class="example-spacer"></span>
-  <mat-slide-toggle [(ngModel)]="edit"><mat-icon>edit</mat-icon></mat-slide-toggle>
+  <mat-slide-toggle [(ngModel)]="edit">
+    <mat-icon>edit</mat-icon>
+  </mat-slide-toggle>
 </mat-toolbar>
 
 <mat-toolbar fxHide.gt-sm="true">
   <input matInput class="quick-search-input" placeholder="Quick search" (change)="search($event)">
   <span class="example-spacer"></span>
-  <mat-slide-toggle [(ngModel)]="aonSearch"><span *ngIf="aonSearch">AON</span><span *ngIf="!aonSearch">P2EzLib</span></mat-slide-toggle>
+  <mat-slide-toggle [(ngModel)]="aonSearch"><span *ngIf="aonSearch">AON</span><span *ngIf="!aonSearch"
+      matTooltip="Need CORS extension">P2EzLib</span></mat-slide-toggle>
 </mat-toolbar>
 
 <div class="container">
   <mat-card class="card card-tabs" *ngIf="searchResult">
+    <button mat-icon-button (click)="searchResult=undefined" style="float: right;">
+      <mat-icon>close</mat-icon>
+    </button>
     <div *ngIf="searchResult" [innerHTML]="searchResult"></div>
   </mat-card>
-  
+
   <mat-card class="card card-tabs" *ngIf="edit">
     <form [formGroup]="urlForm" (ngSubmit)="onSubmit(urlForm.value)">
       <mat-form-field class="field-form-pathbuilder">
@@ -29,7 +36,7 @@
       <button mat-button class="submit-form-pathbuilder" type="submit">Add</button>
     </form>
   </mat-card>
-  
+
   <mat-card class="card card-tabs" *ngIf="characters.length != 0">
     <mat-tab-group>
       <mat-tab *ngFor="let character of characters">
@@ -45,10 +52,11 @@
         <mat-tab-group>
           <mat-tab label="About">
             <div class="about-tab" fxLayout="column" fxLayoutAlign="space-evenly">
-              <div class="margin10" fxLayout="row" fxLayoutAlign="space-evenly">
+              <div class="marginY10" fxLayout="row" fxLayoutAlign="space-evenly">
                 <h2>{{character.name}}</h2>
               </div>
-              <div class="margin10" fxLayout="row" fxLayoutAlign="space-around" style="min-width:500px; align-self: center;"s>
+              <div class="marginY10" fxLayout="row" fxLayoutAlign="space-around"
+                style="min-width:500px; align-self: center;" s>
                 <div fxFlex="33" fxLayoutAlign="center center" matTooltip="Class">
                   <img src="assets/PathbuilderIcons/icon_class.png" height="30px">
                   <span>{{character.class}}</span>
@@ -62,47 +70,53 @@
                   <span>{{character.background}}</span>
                 </div>
               </div>
-              <div class="margin10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
+              <div class="marginY10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
                 <div fxLayout="column" fxFlex="50">
-                  <div class="margin10"> <b>Level</b> : {{character.level}}</div>
-                  <div class="margin10"> Gender : {{character.gender}}</div>
-                  <div class="margin10"> Age : {{character.age}}</div>
-                  <div class="margin10"> <b>Size</b> : {{size[character.size]}}</div>
-                  
+                  <div class="marginY10"> <b>Level</b> : {{character.level}}</div>
+                  <div class="marginY10"> Gender : {{character.gender}}</div>
+                  <div class="marginY10"> Age : {{character.age}}</div>
+                  <div class="marginY10"> <b>Size</b> : {{size[character.size]}}</div>
+
                 </div>
                 <div fxLayout="column" fxFlex="50">
-                  <div class="margin10"> Alignement : {{character.alignment}}</div>
-                  <div class="margin10"> Deity : {{character.deity}}</div>
-                  <div class="margin10"> Languages : {{character.languages.toString()}}</div>
-                  <div class="margin10"> <b>Speed</b> : {{character.attributes.speed}} ft.</div>
-                </div>
-              </div>
-              
-              <div class="margin10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
-                <div fxLayout="column" fxFlex="50">
-                  <div class="margin10"> STR : {{character.abilities.str}} <b>({{displayModifier(character.abilities.str)}})</b></div>
-                  <div class="margin10"> DEX : {{character.abilities.dex}} <b>({{displayModifier(character.abilities.dex)}})</b></div>
-                  <div class="margin10"> CON : {{character.abilities.con}} <b>({{displayModifier(character.abilities.con)}})</b></div>
-                </div>
-                <div fxLayout="column" fxFlex="50">
-                  <div class="margin10"> INT : {{character.abilities.int}} <b>({{displayModifier(character.abilities.int)}})</b></div>
-                  <div class="margin10"> WIS : {{character.abilities.wis}} <b>({{displayModifier(character.abilities.wis)}})</b></div>
-                  <div class="margin10"> CHA : {{character.abilities.cha}} <b>({{displayModifier(character.abilities.cha)}})</b></div>
+                  <div class="marginY10"> Alignement : {{character.alignment}}</div>
+                  <div class="marginY10"> Deity : {{character.deity}}</div>
+                  <div class="marginY10"> Languages : {{character.languages.toString()}}</div>
+                  <div class="marginY10"> <b>Speed</b> : {{character.attributes.speed}} ft.</div>
                 </div>
               </div>
-              
+
+              <div class="marginY10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
+                <div fxLayout="column" fxFlex="50">
+                  <div class="marginY10"> STR : {{character.abilities.str}}
+                    <b>({{displayModifier(character.abilities.str)}})</b></div>
+                  <div class="marginY10"> DEX : {{character.abilities.dex}}
+                    <b>({{displayModifier(character.abilities.dex)}})</b></div>
+                  <div class="marginY10"> CON : {{character.abilities.con}}
+                    <b>({{displayModifier(character.abilities.con)}})</b></div>
+                </div>
+                <div fxLayout="column" fxFlex="50">
+                  <div class="marginY10"> INT : {{character.abilities.int}}
+                    <b>({{displayModifier(character.abilities.int)}})</b></div>
+                  <div class="marginY10"> WIS : {{character.abilities.wis}}
+                    <b>({{displayModifier(character.abilities.wis)}})</b></div>
+                  <div class="marginY10"> CHA : {{character.abilities.cha}}
+                    <b>({{displayModifier(character.abilities.cha)}})</b></div>
+                </div>
+              </div>
+
             </div>
           </mat-tab>
           <!-- COMBAT TAB -->
           <mat-tab label="Combat">
             <div fxLayout="column">
-              <div class="margin10 bordered padding10" fxLayout="row" style="min-width:500px; align-self: center;">
+              <div class="marginY10 bordered paddingY10" fxLayout="row" style="min-width:500px; align-self: center;">
                 <div fxFlex="33" fxLayoutAlign="center center">
                   <img src="assets/PathbuilderIcons/icon_ac.png" height="30px">
                   <span>{{computeAC(character)}} AC</span>
                 </div>
                 <div fxFlex="33" fxLayoutAlign="center center">
-                  <span>{{computeHP(character)}} HP</span>
+                  <span><b>{{computeHP(character)}} HP MAX</b></span>
                 </div>
                 <div fxFlex="33" fxLayoutAlign="center center">
                   <img src="assets/PathbuilderIcons/icon_ac.png" height="30px">
@@ -110,45 +124,55 @@
                 </div>
               </div>
               <div class="bordered" style="min-width:500px; align-self: center;">
-                <div class="margin10" fxLayout="row">
+                <div class="marginY10" fxLayout="row">
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('fortitude',character)+'.png'" height="30px">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('fortitude',character)+'.png'"
+                      height="30px">
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('reflex',character)+'.png'" height="30px">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('reflex',character)+'.png'"
+                      height="30px">
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('will',character)+'.png'" height="30px">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('will',character)+'.png'"
+                      height="30px">
                   </div>
                 </div>
-                <div class="margin10" fxLayout="row">
+                <div class="marginY10" fxLayout="row">
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <span>Fortitude : +{{computeModifier(character.abilities.con) + character.level + findBonusProf("fortitude",character)}}</span>
+                    <span>Fortitude :
+                      +{{computeModifier(character.abilities.con) + character.level + findBonusProf("fortitude",character)}}</span>
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <span>Reflex : +{{computeModifier(character.abilities.dex) + character.level + findBonusProf("reflex",character)}}</span>
+                    <span>Reflex :
+                      +{{computeModifier(character.abilities.dex) + character.level + findBonusProf("reflex",character)}}</span>
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <span>Will : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("will",character)}}</span>
+                    <span>Will :
+                      +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("will",character)}}</span>
                   </div>
                 </div>
               </div>
 
-              <div class="margin10 bordered padding10" style="min-width:500px; align-self: center;">
-                <div class="margin10" fxLayout="row" fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('perception',character)+'.png'" height="30px">
+              <div class="marginY10 bordered paddingY10" style="min-width:500px; align-self: center;">
+                <div class="marginY10" fxLayout="row" fxLayoutAlign="center center">
+                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('perception',character)+'.png'"
+                    height="30px">
                 </div>
-                
-                <div class="margin10" fxLayout="row" fxLayoutAlign="center center">
-                  <span>Perception : +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("perception",character)}}</span>
+
+                <div class="marginY10" fxLayout="row" fxLayoutAlign="center center">
+                  <span>Perception :
+                    +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("perception",character)}}</span>
                 </div>
               </div>
-              
-              <div class="margin10 flex-wrap" fxLayout="row" fxLayoutAlign="space-evenly">
-                <div *ngFor="let weapon of character.weapons" class="margin10 bordered" fxLayout="column" fxFlex="40" fxLayoutAlign="space-evenly">
-                  <p> <b>{{weapon.display}}</b> </p>
+
+              <div class="marginY10 flex-wrap" fxLayout="row" fxLayoutAlign="space-evenly">
+                <div *ngFor="let weapon of character.weapons" class="marginY10 bordered" fxLayout="column" fxFlex="40"
+                  fxLayoutAlign="space-evenly">
+                  <span fxLayoutAlign="center center"> <b>{{weapon.display}}</b> </span>
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProfWeapon(weapon,character)+'.png'" height="30px">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProfWeapon(weapon,character)+'.png'"
+                      height="30px">
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
                     <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
@@ -160,9 +184,11 @@
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
                     <img [src]="'assets/PathbuilderIcons/icon_'+weapon.die+'.png'" height="30px">
-                    <span>{{strikingRunes[weapon.str]}}{{weapon.die}} + {{computeModifier(character.abilities.str)}}</span>
+                    <span>{{strikingRunes[weapon.str]}}{{weapon.die}} +
+                      {{computeModifier(character.abilities.str)}}</span>
                   </div>
-                  <p *ngIf="weapon.runes.length != 0">Runes : {{weapon.runes.toString()}}</p>
+                  <span *ngIf="weapon.runes.length != 0" fxLayoutAlign="center center">Runes :
+                    {{weapon.runes.toString()}}</span>
                 </div>
               </div>
 
@@ -171,143 +197,191 @@
           <!-- SKILLS TAB -->
           <mat-tab label="Skills">
             <div class="about-tab" fxLayout="row" fxLayoutAlign="space-evenly">
-              <div class="margin10 bordered padding10" style="min-width:500px; align-self: center;">
-              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('acrobatics',character)+'.png'" height="30px">
+              <div class="marginY10 bordered paddingY10" style="min-width:500px; align-self: center;">
+                <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('acrobatics',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('arcana',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('athletics',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('crafting',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('deception',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('diplomacy',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('intimidation',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('medicine',character)+'.png'"
+                      height="30px">
+                  </div>
                 </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('arcana',character)+'.png'" height="30px">
+                <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                  <div fxLayoutAlign="center center">
+                    Acrobatics :
+                    {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.acrobatics)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Arcana :
+                    {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.arcana)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Athletics :
+                    {{computeSkill(computeModifier(character.abilities.str),character.level,character.proficiencies.athletics)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Crafting :
+                    {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.crafting)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Deception :
+                    {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.deception)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Diplomacy :
+                    {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.diplomacy)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Intimidation :
+                    {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.intimidation)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Medicine :
+                    {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.medicine)}}
+                  </div>
                 </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('athletics',character)+'.png'" height="30px">
+                <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('nature',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('occultism',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('performance',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('religion',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('society',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('stealth',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('survival',character)+'.png'"
+                      height="30px">
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('thievery',character)+'.png'"
+                      height="30px">
+                  </div>
                 </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('crafting',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('deception',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('diplomacy',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('intimidation',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('medicine',character)+'.png'" height="30px">
+                <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
+                  <div fxLayoutAlign="center center">
+                    Nature :
+                    {{computeSkill(computeModifier(character.abilities.wis), character.level,character.proficiencies.nature)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Occultism :
+                    {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.occultism)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Performance :
+                    {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.performance)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Religion :
+                    {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.religion)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Society :
+                    {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.society)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Stealth :
+                    {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.stealth)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Survival :
+                    {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.survival)}}
+                  </div>
+                  <div fxLayoutAlign="center center">
+                    Thievery :
+                    {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.thievery)}}
+                  </div>
                 </div>
               </div>
-              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
-                <div fxLayoutAlign="center center">
-                  Acrobatics : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.acrobatics)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Arcana : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.arcana)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Athletics : {{computeSkill(computeModifier(character.abilities.str),character.level,character.proficiencies.athletics)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Crafting : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.crafting)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Deception : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.deception)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Diplomacy : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.diplomacy)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Intimidation : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.intimidation)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Medicine : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.medicine)}}
-                </div>
-              </div>
-              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('nature',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('occultism',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('performance',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('religion',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('society',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('stealth',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('survival',character)+'.png'" height="30px">
-                </div>
-                <div fxLayoutAlign="center center">
-                  <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProf('thievery',character)+'.png'" height="30px">
-                </div>
-              </div>
-              <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
-                <div fxLayoutAlign="center center">
-                  Nature : {{computeSkill(computeModifier(character.abilities.wis), character.level,character.proficiencies.nature)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Occultism : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.occultism)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Performance : {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.performance)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Religion : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.religion)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Society : {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.society)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Stealth : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.stealth)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Survival : {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.survival)}}
-                </div>
-                <div fxLayoutAlign="center center">
-                  Thievery : {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.thievery)}}
-                </div>
-              </div>
-            </div>
             </div>
           </mat-tab>
           <!-- SPELLS TAB -->
           <mat-tab label="Spells">
-            <div>
+            <div class="about-tab" fxLayout="row" fxLayoutAlign="space-evenly">
               <div *ngFor="let spellList of character.spellCasters">
-                <p> List : {{spellList.name}} -- {{spellList.spellcastingType}}</p>
-                <p> Spell per day : {{spellList.perDay.toString()}}</p>
-                <div *ngFor="let spells of spellList.spells">
-                  <h3>Spell Level {{spells.spellLevel}}</h3>
-                  <div *ngFor="let spell of spells.list">
-                    <p>{{spell}}</p>
+                <div class="marginY10 bordered paddingY10 paddingX20">
+                  <h2> List : {{spellList.name}}</h2>
+                  <p *ngIf="spellList.magicTradition==='focus'"> Max Focus Points{{spellList.focusPoints}}</p>
+                  <div *ngFor="let spells of spellList.spells; let index=index">
+                    <h3>Spell Level {{spells.spellLevel}} <span
+                        *ngIf="spellList.magicTradition!=='focus' && spells.spellLevel > 0">-- Spell per day
+                        {{spellList.perDay[index]}}</span></h3>
+                    <div *ngFor="let spell of spells.list">
+                      <div fxLayoutAlign="start center">
+                        <img [src]="'assets/PathbuilderIcons/action_single.png'" height="30px">
+                        <span>{{spell}}</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </mat-tab>
           <!-- FEATS TAB -->
-          <mat-tab label="Feats">
-            <div>
-              <div *ngFor="let feat of character.feats">
-                <p>Feat : {{feat[0]}}</p>
+          <mat-tab label="Feats & Specials">
+            <div class="about-tab" fxLayout="row" fxLayoutAlign="space-evenly">
+              <div class="marginY10 bordered paddingY10 paddingX20" fxLayout="column" fxLayoutAlign="space-evenly">
+                <h2>Feats List</h2>
+                <div fxLayoutAlign="start center" *ngFor="let feat of character.feats">
+                  <button mat-icon-button (click)="searchFor(featContent.textContent)"><img [src]="'assets/PathbuilderIcons/icon_skill.png'" height="30px"></button>
+                  <span #featContent>{{feat[0]}}</span>
+                </div>
+              </div>>
+              <div class="marginY10 bordered paddingY10 paddingX20" fxLayout="column" fxLayoutAlign="space-evenly">
+                <h2>Specials List</h2>
+                <div fxLayoutAlign="start center" *ngFor="let special of character.specials">
+                  <button mat-icon-button (click)="searchFor(specialContent.textContent)"><img [src]="'assets/PathbuilderIcons/icon_known.png'" height="30px"></button>
+                  <span #specialContent>{{special}}</span>
+                </div>
               </div>
             </div>
           </mat-tab>
         </mat-tab-group>
-        
+
       </mat-tab>
     </mat-tab-group>
-    
+
   </mat-card>
 </div>
-
-
