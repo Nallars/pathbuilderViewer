@@ -35,6 +35,12 @@ import {
 })
 export class MainComponent implements OnInit {
 
+  /** TODO
+   * - Supprimer l'appel aux fonctions dans l'HTML -> pas trop dérengeant parce que le dom ne sera a priori pas update pour l'instant
+   * - Roll automatique des dés
+   * - Styliser les resultats de recherches
+   */
+
   urlForm: FormGroup;
   characters: Build[] = [];
   strikingRunes = {
@@ -68,7 +74,7 @@ export class MainComponent implements OnInit {
       console.log(characterData.build);
       //Gather AC Value for worn armor
       let wornArmor = this.findWornArmor(characterData.build.armor);
-      if (wornArmor)
+      if (wornArmor) {
         this.dbReader.getEquipmentInfo(wornArmor.name).subscribe(armorData => {
           let charToUpdate = this.characters.find(char => char.name === characterData.build.name && char.level === characterData.build.level);
           let wornArmorChar = this.findWornArmor(charToUpdate.armor);
@@ -77,9 +83,10 @@ export class MainComponent implements OnInit {
         }, error => {
           console.warn(error);
         });
+      }
       //Gather Shield AC Value for worn shield
       let wornShield = this.findWornShield(characterData.build.armor);
-      if (wornShield)
+      if (wornShield){
         this.dbReader.getEquipmentInfo(wornShield.name).subscribe(armorData => {
           let charToUpdate = this.characters.find(char => char.name === characterData.build.name && char.level === characterData.build.level);
           let wornShieldChar = this.findWornShield(charToUpdate.armor);
@@ -88,7 +95,47 @@ export class MainComponent implements OnInit {
         }, error => {
           console.warn(error);
         });
-
+      }
+      //Gather Spells cost
+      for(let spellList of characterData.build.spellCasters){
+        for(let spellLevel of spellList.spells){
+          for(let [index,spellName] of spellLevel.list.entries()){
+            console.log(index);
+            this.dbReader.getSpellInfo(spellName).subscribe(spellData => {
+              let charToUpdate = this.characters.find(char => char.name === characterData.build.name && char.level === characterData.build.level);
+              switch(spellData.data.time.value){
+                case "0":
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":0};
+                  break;
+                case "1":
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":1};
+                  break;
+                case "2":
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":2};
+                  break;
+                case "3":
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":3};
+                  break;
+                case "1 to 3":
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":1};
+                  break;
+                case "1 to 2":
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":1};
+                  break;
+                case "reaction":
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":4};
+                  break;
+                default:
+                  spellLevel.list[index] = {"spellName":spellName,"spellCost":0};
+                  break;
+              }
+              localStorage.setItem('characters', JSON.stringify(this.characters));
+            }, error => {
+              console.warn(error);
+            });
+          }
+        }
+      }
       const checkIfExist = this.characters.findIndex(char => char.name === characterData.build.name && char.level === characterData.build.level);
       if (checkIfExist == -1) {
         this.characters.push(characterData.build);
@@ -151,9 +198,17 @@ export class MainComponent implements OnInit {
 
   computeSkill(modifier: number, level: number, skillProf: number) {
     if (skillProf > 0) {
-      return "+" + (modifier + level + skillProf);
+      if (modifier + level + skillProf >= 0){
+        return "+" + (modifier + level + skillProf);
+      } else {
+        return (modifier + level + skillProf);
+      }
     } else {
-      return modifier;
+      if (modifier >= 0){
+        return "+" + modifier;
+      } else {
+        return modifier;
+      }
     }
   }
 

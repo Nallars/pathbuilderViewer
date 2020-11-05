@@ -19,6 +19,6 @@ export class DbReaderService {
   }
 
   private formatName(name: string){
-    return name.toLowerCase().replace(" ","-").replace("\'","-");
+    return name.toLowerCase().split(" ").join("-").split("\'").join("-");
   }
 }

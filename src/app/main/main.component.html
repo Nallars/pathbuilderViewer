@@ -58,15 +58,15 @@
               <div class="marginY10" fxLayout="row" fxLayoutAlign="space-around"
                 style="min-width:500px; align-self: center;" s>
                 <div fxFlex="33" fxLayoutAlign="center center" matTooltip="Class">
-                  <img src="assets/PathbuilderIcons/icon_class.png" height="30px">
+                  <img src="assets/PathbuilderIcons/icon_class.png" height="30px" class="hoverSearch" (click)="searchFor(character.class)">
                   <span>{{character.class}}</span>
                 </div>
                 <div fxFlex="33" fxLayoutAlign="center center" matTooltip="Ancestry - Heritage">
-                  <img src="assets/PathbuilderIcons/icon_ancestry.png" height="30px">
-                  <span>{{character.ancestry}} - {{character.heritage}}</span>
+                  <img src="assets/PathbuilderIcons/icon_ancestry.png" height="30px" class="hoverSearch" (click)="searchFor(character.ancestry)">
+                  <span><span class="hoverSearch" (click)="searchFor(character.heritage)">{{character.ancestry}}</span> - <span class="hoverSearch" (click)="searchFor(character.heritage)">{{character.heritage}}</span></span>
                 </div>
                 <div fxFlex="33" fxLayoutAlign="center center" matTooltip="Background">
-                  <img src="assets/PathbuilderIcons/icon_background.png" height="30px">
+                  <img src="assets/PathbuilderIcons/icon_background.png" height="30px" class="hoverSearch" (click)="searchFor(character.background)">
                   <span>{{character.background}}</span>
                 </div>
               </div>
@@ -88,20 +88,44 @@
 
               <div class="marginY10 bordered" fxLayout="row" style="min-width:500px; align-self: center;">
                 <div fxLayout="column" fxFlex="50">
-                  <div class="marginY10"> STR : {{character.abilities.str}}
-                    <b>({{displayModifier(character.abilities.str)}})</b></div>
-                  <div class="marginY10"> DEX : {{character.abilities.dex}}
-                    <b>({{displayModifier(character.abilities.dex)}})</b></div>
-                  <div class="marginY10"> CON : {{character.abilities.con}}
-                    <b>({{displayModifier(character.abilities.con)}})</b></div>
+                  <div class="marginY10" fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>STR : {{character.abilities.str}}
+                      <b>({{displayModifier(character.abilities.str)}})</b>
+                    </span>
+                  </div>
+                  <div class="marginY10" fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>DEX : {{character.abilities.dex}}
+                      <b>({{displayModifier(character.abilities.dex)}})</b>
+                    </span>
+                  </div>
+                  <div class="marginY10" fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>CON : {{character.abilities.con}}
+                      <b>({{displayModifier(character.abilities.con)}})</b>
+                    </span>
+                  </div>
                 </div>
                 <div fxLayout="column" fxFlex="50">
-                  <div class="marginY10"> INT : {{character.abilities.int}}
-                    <b>({{displayModifier(character.abilities.int)}})</b></div>
-                  <div class="marginY10"> WIS : {{character.abilities.wis}}
-                    <b>({{displayModifier(character.abilities.wis)}})</b></div>
-                  <div class="marginY10"> CHA : {{character.abilities.cha}}
-                    <b>({{displayModifier(character.abilities.cha)}})</b></div>
+                  <div class="marginY10" fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>INT : {{character.abilities.int}}
+                      <b>({{displayModifier(character.abilities.int)}})</b>
+                    </span>
+                  </div>
+                  <div class="marginY10" fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>WIS : {{character.abilities.wis}}
+                      <b>({{displayModifier(character.abilities.wis)}})</b>
+                    </span>
+                  </div>
+                  <div class="marginY10" fxFlex="33" fxLayoutAlign="center center">
+                    <img [src]="'assets/PathbuilderIcons/icon_d20.png'" height="30px">
+                    <span>CHA : {{character.abilities.cha}}
+                      <b>({{displayModifier(character.abilities.cha)}})</b>
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -140,15 +164,15 @@
                 </div>
                 <div class="marginY10" fxLayout="row">
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <span>Fortitude :
+                    <span class="hoverSearch" (click)="searchFor('Fortitude')">Fortitude :
                       +{{computeModifier(character.abilities.con) + character.level + findBonusProf("fortitude",character)}}</span>
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <span>Reflex :
+                    <span class="hoverSearch" (click)="searchFor('Reflex')">Reflex :
                       +{{computeModifier(character.abilities.dex) + character.level + findBonusProf("reflex",character)}}</span>
                   </div>
                   <div fxFlex="33" fxLayoutAlign="center center">
-                    <span>Will :
+                    <span class="hoverSearch" (click)="searchFor('Will')">Will :
                       +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("will",character)}}</span>
                   </div>
                 </div>
@@ -161,15 +185,16 @@
                 </div>
 
                 <div class="marginY10" fxLayout="row" fxLayoutAlign="center center">
-                  <span>Perception :
+                  <span class="hoverSearch" (click)="searchFor('Perception')">Perception :
                     +{{computeModifier(character.abilities.wis) + character.level + findBonusProf("perception",character)}}</span>
                 </div>
               </div>
 
+              <!-- Weapon Unit -->
               <div class="marginY10 flex-wrap" fxLayout="row" fxLayoutAlign="space-evenly">
                 <div *ngFor="let weapon of character.weapons" class="marginY10 bordered" fxLayout="column" fxFlex="40"
                   fxLayoutAlign="space-evenly">
-                  <span fxLayoutAlign="center center"> <b>{{weapon.display}}</b> </span>
+                  <span fxLayoutAlign="center center" class="hoverSearch" (click)="searchFor(weapon.name)"> <b>{{weapon.display}}</b> </span>
                   <div fxFlex="33" fxLayoutAlign="center center">
                     <img [src]="'assets/PathbuilderIcons/proficiency_'+findBonusProfWeapon(weapon,character)+'.png'"
                       height="30px">
@@ -187,8 +212,9 @@
                     <span>{{strikingRunes[weapon.str]}}{{weapon.die}} +
                       {{computeModifier(character.abilities.str)}}</span>
                   </div>
-                  <span *ngIf="weapon.runes.length != 0" fxLayoutAlign="center center">Runes :
-                    {{weapon.runes.toString()}}</span>
+                  <span *ngIf="weapon.runes.length != 0" fxLayoutAlign="center center">Runes : 
+                    <span *ngFor="let rune of weapon.runes" class="hoverSearch" (click)="searchFor(rune)"> {{rune}} </span>
+                  </span>
                 </div>
               </div>
 
@@ -234,35 +260,35 @@
                 </div>
                 <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
                   <div fxLayoutAlign="center center">
-                    Acrobatics :
+                    <span class="hoverSearch" (click)="searchFor('Acrobatics')"> Acrobatics </span>:
                     {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.acrobatics)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Arcana :
+                    <span class="hoverSearch" (click)="searchFor('Arcana')"> Arcana </span>:
                     {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.arcana)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Athletics :
+                    <span class="hoverSearch" (click)="searchFor('Athletics')"> Athletics </span>:
                     {{computeSkill(computeModifier(character.abilities.str),character.level,character.proficiencies.athletics)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Crafting :
+                    <span class="hoverSearch" (click)="searchFor('Crafting')"> Crafting </span>:
                     {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.crafting)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Deception :
+                    <span class="hoverSearch" (click)="searchFor('Deception')"> Deception </span>:
                     {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.deception)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Diplomacy :
+                    <span class="hoverSearch" (click)="searchFor('Diplomacy')"> Diplomacy </span>:
                     {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.diplomacy)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Intimidation :
+                    <span class="hoverSearch" (click)="searchFor('Intimidation')"> Intimidation </span>:
                     {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.intimidation)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Medicine :
+                    <span class="hoverSearch" (click)="searchFor('Medicine')"> Medicine </span>:
                     {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.medicine)}}
                   </div>
                 </div>
@@ -302,35 +328,35 @@
                 </div>
                 <div fxLayout="column" fxFlex="45" fxLayoutAlign="space-evenly">
                   <div fxLayoutAlign="center center">
-                    Nature :
+                    <span class="hoverSearch" (click)="searchFor('Nature')"> Nature </span>:
                     {{computeSkill(computeModifier(character.abilities.wis), character.level,character.proficiencies.nature)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Occultism :
+                    <span class="hoverSearch" (click)="searchFor('Occultism')"> Occultism </span>:
                     {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.occultism)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Performance :
+                    <span class="hoverSearch" (click)="searchFor('Performance')"> Performance </span>:
                     {{computeSkill(computeModifier(character.abilities.cha),character.level,character.proficiencies.performance)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Religion :
+                    <span class="hoverSearch" (click)="searchFor('Religion')"> Religion </span>:
                     {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.religion)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Society :
+                    <span class="hoverSearch" (click)="searchFor('Society')"> Society </span>:
                     {{computeSkill(computeModifier(character.abilities.int),character.level,character.proficiencies.society)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Stealth :
+                    <span class="hoverSearch" (click)="searchFor('Stealth')"> Stealth </span>:
                     {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.stealth)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Survival :
+                    <span class="hoverSearch" (click)="searchFor('Survival')"> Survival </span>:
                     {{computeSkill(computeModifier(character.abilities.wis),character.level,character.proficiencies.survival)}}
                   </div>
                   <div fxLayoutAlign="center center">
-                    Thievery :
+                    <span class="hoverSearch" (click)="searchFor('Thievery')"> Thievery </span>:
                     {{computeSkill(computeModifier(character.abilities.dex),character.level,character.proficiencies.thievery)}}
                   </div>
                 </div>
@@ -348,10 +374,14 @@
                     <h3>Spell Level {{spells.spellLevel}} <span
                         *ngIf="spellList.magicTradition!=='focus' && spells.spellLevel > 0">-- Spell per day
                         {{spellList.perDay[index]}}</span></h3>
-                    <div *ngFor="let spell of spells.list">
+                    <div *ngFor="let spell of spells.list; let index=index">
                       <div fxLayoutAlign="start center">
-                        <img [src]="'assets/PathbuilderIcons/action_single.png'" height="30px">
-                        <span>{{spell}}</span>
+                        <img *ngIf="spell.spellCost==0" [src]="'assets/PathbuilderIcons/action_free.png'" height="30px">
+                        <img *ngIf="spell.spellCost==1" [src]="'assets/PathbuilderIcons/action_single.png'" height="30px">
+                        <img *ngIf="spell.spellCost==2" [src]="'assets/PathbuilderIcons/action_double.png'" height="30px">
+                        <img *ngIf="spell.spellCost==3" [src]="'assets/PathbuilderIcons/action_triple.png'" height="30px">
+                        <img *ngIf="spell.spellCost==4" [src]="'assets/PathbuilderIcons/action_reaction.png'" height="30px">
+                        <span class="hoverSearch" (click)="searchFor(spell.spellName)">{{spell.spellName}}</span>
                       </div>
                     </div>
                   </div>
@@ -365,14 +395,14 @@
               <div class="marginY10 bordered paddingY10 paddingX20" fxLayout="column" fxLayoutAlign="space-evenly">
                 <h2>Feats List</h2>
                 <div fxLayoutAlign="start center" *ngFor="let feat of character.feats">
-                  <button mat-icon-button (click)="searchFor(featContent.textContent)"><img [src]="'assets/PathbuilderIcons/icon_skill.png'" height="30px"></button>
+                  <button mat-icon-button (click)="searchFor(featContent.textContent)" class="hoverSearch"><img [src]="'assets/PathbuilderIcons/icon_skill.png'" height="30px"></button>
                   <span #featContent>{{feat[0]}}</span>
                 </div>
-              </div>>
+              </div>
               <div class="marginY10 bordered paddingY10 paddingX20" fxLayout="column" fxLayoutAlign="space-evenly">
                 <h2>Specials List</h2>
                 <div fxLayoutAlign="start center" *ngFor="let special of character.specials">
-                  <button mat-icon-button (click)="searchFor(specialContent.textContent)"><img [src]="'assets/PathbuilderIcons/icon_known.png'" height="30px"></button>
+                  <button mat-icon-button (click)="searchFor(specialContent.textContent)" class="hoverSearch"><img [src]="'assets/PathbuilderIcons/icon_known.png'" height="30px"></button>
                   <span #specialContent>{{special}}</span>
                 </div>
               </div>

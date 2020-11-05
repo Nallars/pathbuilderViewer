@@ -22,6 +22,8 @@
 .quick-search-input{
   margin: auto;
   width: auto;
+  padding: 10px;
+  border-radius: 50px;
 }
 
 .field-form-pathbuilder {
@@ -76,5 +78,9 @@
 
 .flex-wrap{
   flex-wrap: wrap;
+}
+
+.hoverSearch:hover{
+  cursor: help;
 }
 

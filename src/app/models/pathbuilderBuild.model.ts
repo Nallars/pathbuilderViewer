@@ -90,7 +90,7 @@ export interface Armor {
 
 export interface Spell {
     spellLevel: number;
-    list: string[];
+    list: any[];
 }
 
 export interface SpellCaster {
